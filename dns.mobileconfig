@@ -2,30 +2,40 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>PayloadDisplayName</key>
-    <string>YUSEEF STORE DNS</string>
-    <key>PayloadIdentifier</key>
-    <string>com.yuseef.dns.profile</string>
-    <key>PayloadType</key>
-    <string>Configuration</string>
-    <key>PayloadUUID</key>
-    <string>8A1D3C4E-5F6B-7A8B-9C0D-1E2F3A4B5C6D</string>
-    <key>PayloadVersion</key>
-    <integer>1</integer>
     <key>PayloadContent</key>
     <array>
         <dict>
             <key>PayloadDisplayName</key>
-            <string>DNS Settings</string>
+            <string>yuseef_sinan DNS</string>
             <key>PayloadIdentifier</key>
-            <string>com.yuseef.dns.settings</string>
+            <string>com.yuseef.dns.config</string>
             <key>PayloadType</key>
-            <string>com.apple.transparentproxy.notunnel</string>
+            <string>com.apple.dnsSettings.managed</string>
             <key>PayloadUUID</key>
-            <string>1A2B3C4D-5E6F-7A8B-9C0D-1E2F3A4B5C6D</string>
+            <string>2A3B4C5D-6E7F-8A9B-0C1D-2E3F4A5B6C7D</string>
             <key>PayloadVersion</key>
             <integer>1</integer>
+            <key>DNSSettings</key>
+            <dict>
+                <key>ServerAddresses</key>
+                <array>
+                    <string>37.236.160.1</string>
+                    <string>1.1.1.1</string>
+                </array>
+                <key>ServerName</key>
+                <string>yuseef_sinan</string>
+            </dict>
         </dict>
     </array>
+    <key>PayloadDisplayName</key>
+    <string>yuseef_sinan DNS Profile</string>
+    <key>PayloadIdentifier</key>
+    <string>com.yuseef.profile.root</string>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>1A2B3C4D-5E6F-7A8B-9C0D-1E2F3A4B5C6D</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
 </dict>
 </plist>
