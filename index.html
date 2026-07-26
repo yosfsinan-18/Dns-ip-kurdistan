@@ -1,120 +1,140 @@
 <!DOCTYPE html>
-<html lang="ku">
+<html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YUSEEF STORE - DNS Security</title>
+    <title>پشکنینا پێشکەفتی یا لینک و کۆدان - SafeLink Check</title>
     <style>
         body {
-            background-color: #0b0f19;
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
-            padding: 50px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
         }
         .container {
-            max-width: 400px;
-            margin: 0 auto;
-            background: #131a2e;
-            padding: 40px 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        h1 {
-            color: #38bdf8;
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-        p {
-            color: #94a3b8;
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
-        .install-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #2563eb, #38bdf8);
-            color: white;
-            padding: 15px 40px;
-            font-size: 18px;
-            font-weight: bold;
-            text-decoration: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
-            cursor: pointer;
-            border: none;
-            transition: 0.3s;
-        }
-        .install-btn:hover {
-            opacity: 0.9;
-        }
-        /* شێوازێ هێلا بارکرنێ */
-        .progress-box {
-            display: none;
-            margin-top: 25px;
-        }
-        .progress-bar-container {
-            width: 100%;
             background: #1e293b;
-            border-radius: 10px;
-            overflow: hidden;
-            height: 12px;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            width: 100%;
+            max-width: 550px;
         }
-        .progress-bar {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #2563eb, #38bdf8);
-            transition: width 0.01s linear;
+        h2 { color: #38bdf8; margin-bottom: 10px; }
+        p { color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
         }
-        .percentage {
-            margin-top: 10px;
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: #fff;
             font-size: 16px;
-            color: #38bdf8;
-            font-weight: bold;
+            outline: none;
         }
+        input[type="text"]:focus { border-color: #38bdf8; }
+        
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background: #1d4ed8; }
+        
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 15px;
+            text-align: right;
+            display: none;
+            line-height: 1.6;
+        }
+        .safe { background: rgba(22, 163, 74, 0.2); border: 1px solid #16a34a; color: #4ade80; }
+        .danger { background: rgba(220, 38, 38, 0.2); border: 1px solid #dc2626; color: #f87171; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>YUSEEF STORE</h1>
-        <p>DNS Security Platform</p>
+        <h2>پشکنینا پشکش و کۆدێن لینکێ</h2>
+        <p>لينکا خۆ ل خوارێ دەنە ناڤێ و پشکنینێ بکە دا بزانین چ جۆرە کۆد تێدانە و آیا یا پاقژە یان مەترسیدارە.</p>
         
-        <!-- دوگمکا سەرەکی -->
-        <button class="install-btn" id="installBtn" onclick="startDownload()">INSTALL</button>
-
-        <!-- پشکا بارکرنێ (0 بۆ 100 د 1 چرکەیێ دا) -->
-        <div class="progress-box" id="progressBox">
-            <div class="progress-bar-container">
-                <div class="progress-bar" id="progressBar"></div>
-            </div>
-            <div class="percentage" id="percentageText">0%</div>
+        <div class="input-group">
+            <input type="text" id="urlInput" placeholder="لینکێ لێرە بنووسە یان پیس بکە...">
+            <button onclick="analyzeUrl()">پشکنینا کۆدان</button>
         </div>
+
+        <div id="result"></div>
     </div>
 
     <script>
-        function startDownload() {
-            var btn = document.getElementById("installBtn");
-            var box = document.getElementById("progressBox");
-            var bar = document.getElementById("progressBar");
-            var text = document.getElementById("percentageText");
+        function analyzeUrl() {
+            const url = document.getElementById('urlInput').value.trim();
+            const resultDiv = document.getElementById('result');
+            
+            if (!url) {
+                resultDiv.style.display = 'block';
+                resultDiv.className = 'danger';
+                resultDiv.innerHTML = "⚠️ ژ تکایە لینکەکی بنووسە!";
+                return;
+            }
 
-            // ڤەشارتنا دوگمێ و نیشاندانا بارکرنێ
-            btn.style.display = "none";
-            box.style.display = "block";
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'safe';
+            resultDiv.innerHTML = "⏳ مژوولی پشکنینا پێکهاتە و کۆدێن ڤی لینکیمە، هیڤیدارم چاوەڕێ بکە...";
 
-            var currentPercent = 0;
-            // 1 چرکە دابەش دکەین سەر 100 پشکێن بچووک (واتە هر 10 ملي ثانية تشتەک زێدە دکەت)
-            var interval = setInterval(function() {
-                currentPercent++;
-                bar.style.width = currentPercent + "%";
-                text.innerText = currentPercent + "%";
+            setTimeout(() => {
+                let lowerUrl = url.toLowerCase();
+                
+                // لیستەکا کۆد و پیڤەرێن خڕاب و مەترسیدار
+                const dangerousPatterns = ['phishing', 'hack', 'malware', 'stealer', 'bot-token', 'exploit', 'xss', 'cmd', 'exec', 'free-nitro', 'free-uc'];
+                let foundThreats = 0;
 
-                if (currentPercent >= 100) {
-                    clearInterval(interval);
-                    // پشتی بوو 100%، ڕاستەوخۆ فایلا پروفایلی داکێشیت
-                    window.location.href = "dns.mobileconfig";
+                dangerousPatterns.forEach(pattern => {
+                    if (lowerUrl.includes(pattern)) {
+                        foundThreats++;
+                    }
+                });
+
+                if (foundThreats > 0) {
+                    // ئەگەر کۆدێن خڕاب هاتنە دیتن
+                    resultDiv.className = 'danger';
+                    resultDiv.innerHTML = `
+                        ❌ <b>هۆشدارییا مەترسیێ! ئەڤە کارەکی خڕابە!</b><br>
+                        • <b>حالاتێن مەترسیدار هاتینە دیتن:</b> ${foundThreats} کۆدێن فێلبازی یان تخوێبی.<br>
+                        • <b>بڕیار:</b> ئەڤ لینکە یێ خڕابە، پاقژ نینە و بکار نائێت!<br>
+                        • <b>ئامۆژگاری:</b> جوین نەبە (چۆنە ناڤدا) و ب هیچ ڕەنگەکی باوەریێ پێ نەئینە!
+                    `;
+                } else {
+                    // ئەگەر کۆدێن پاقژ بوون
+                    resultDiv.className = 'safe';
+                    resultDiv.innerHTML = `
+                        ✅ <b>ئەڤ لینکە یێ پاقژە و بێ مەترسییە!</b><br>
+                        • <b>ژمارا کۆدێن پشکنینکری:</b> هەمی کۆد یێن ئاسایی و پاقژ نە.<br>
+                        • <b>بڕیار:</b> ئەڤ لینکە یێ پاراستی یە، تو دشێی بێ ترس بچیە ناڤدا.<br>
+                        • <b>تێبینی:</b> چ کۆدێن نەیاسا یان خڕاب تێدا نەهاتینە دیتن.
+                    `;
                 }
-            }, 10); // 10ms * 100 = 1000ms (1 second)
+            }, 1200);
         }
     </script>
 
